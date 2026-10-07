@@ -1,0 +1,2 @@
+# NuxPrint Cloud Print Agent - Linux Native
+gerekli proje son teknoloji bir şekilde yapılıp structure buraya ifade edilecek
