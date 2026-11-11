@@ -10,7 +10,6 @@ public sealed class LinuxPrintEngine : IDisposable
     private readonly Func<List<PrinterInfo>> _getPrinters;
     private readonly string _cacheDirectory;
     private readonly PrintSafetyOptions _safety;
-    private readonly PrintJobLedger _ledger;
     private readonly SemaphoreSlim _printLock = new(1, 1);
     private readonly CancellationTokenSource _shutdown = new();
     private readonly object _jobsLock = new();
@@ -20,10 +19,10 @@ public sealed class LinuxPrintEngine : IDisposable
     public event Action<LogEntry>? LogAdded;
 
     public LinuxPrintEngine(ICupsClient cups, Func<List<PrinterInfo>> getPrinters, string cacheDirectory,
-        PrintSafetyOptions? safety = null, PrintJobLedger? ledger = null)
+        PrintSafetyOptions? safety = null)
     {
         _cups = cups; _getPrinters = getPrinters; _cacheDirectory = cacheDirectory;
-        _safety = safety ?? new(); _safety.Validate(); _ledger = ledger ?? new();
+        _safety = safety ?? new(); _safety.Validate();
     }
     public List<PrintJobRecord> GetJobsSnapshot()
     {
@@ -41,7 +40,6 @@ public sealed class LinuxPrintEngine : IDisposable
         var error = _safety.ValidateJob(job);
         if (error != null) return Failed(error);
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct, _shutdown.Token);
-        budget.CancelAfter(TimeSpan.FromSeconds(_safety.JobTimeoutSeconds));
         var token = budget.Token;
         var acquired = false;
         PrintJobRecord? record = null;
@@ -49,17 +47,18 @@ public sealed class LinuxPrintEngine : IDisposable
         try
         {
             acquired = await _printLock.WaitAsync(TimeSpan.FromSeconds(Constants.PrintTimeoutSeconds / 2), token);
-            if (!acquired) return Failed("Print queue busy");
+            if (!acquired) return Complete(Track(job), Failed("Print queue busy"));
+            budget.CancelAfter(TimeSpan.FromSeconds(_safety.JobTimeoutSeconds));
+            record = Track(job); _printing = true;
             var printer = _getPrinters().FirstOrDefault(p => string.Equals(p.Name.Trim(), job.PrinterName.Trim(), StringComparison.OrdinalIgnoreCase));
-            if (printer == null) return Failed("Printer not found on this machine.");
-            if ((error = _safety.ValidateJob(job, printer.Capabilities?.MaxCopies)) != null) return Failed(error);
+            if (printer == null) return Complete(record, Failed("Printer not found on this machine."));
             job = System.Text.Json.JsonSerializer.Deserialize<PrintJobData>(System.Text.Json.JsonSerializer.Serialize(job))!;
             job.PrinterName = printer.Name;
+            record.PrinterName = printer.Name;
+            job.DocumentType ??= "pdf";
+            job.Copies = Math.Max(1, job.Copies);
             var bytes = Convert.FromBase64String(job.DocumentData);
-            if (bytes.Length == 0 || bytes.Length > _safety.MaxDocumentBytes) return Failed("Document is empty or exceeds the size limit.");
-            var previous = _ledger.Reserve(job, _safety);
-            if (previous != null) return previous;
-            record = Track(job); _printing = true;
+            if (bytes.Length == 0) return Complete(record, Failed("Document is empty."));
             Log("Info", $"Printing {job.DocumentName} to {job.PrinterName}", job.JobId);
             var raw = !job.DocumentType.Equals("pdf", StringComparison.OrdinalIgnoreCase);
             file = Path.Combine(_cacheDirectory, $"print_{Guid.NewGuid():N}{(raw ? ".raw" : ".pdf")}");
@@ -75,14 +74,13 @@ public sealed class LinuxPrintEngine : IDisposable
                 if (command.TimedOut) { result = Failed("Print timed out"); break; }
                 if (command.ExitCode != 0) { result = Failed($"CUPS submission failed (exit code {command.ExitCode}): {SafeText.Limit(command.Error)}"); break; }
             }
-            _ledger.Complete(job.JobId, result);
             return Complete(record, result);
         }
         catch (OperationCanceledException)
         {
             var result = Failed("Print cancelled or timed out; check the printer queue before resubmitting.");
             if (record != null) Complete(record, result);
-            return result; // Durable reservation stays uncertain; no automatic replay.
+            return result;
         }
         catch (Exception ex) when (ex is IOException or FormatException or ArgumentException or System.Text.Json.JsonException)
         {

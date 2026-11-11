@@ -1,6 +1,6 @@
 # NuxPrint kaynak kodundan çıkarılan API sözleşmesi
 
-Tarih: 2026-10-21. Kaynak: Windows Agent 1.9.4 ZIP'i. Bu belge istemcinin gönderdiği ve beklediği sözleşmeyi kaydeder. Canlı sunucu veya sunucu kaynak kodu doğrulaması yapılmadı. «Kaynakta doğrulandı», sunucunun bugün aynı davranışı garanti ettiği anlamına gelmez. Referans dosyaları değiştirilmedi.
+Tarih: 2026-10-21. Bu belge başlangıçta Windows Agent 1.9.4 kaynağından çıkarılan API sözleşmesini kaydeder. Windows kaynakları artık projenin parçası değildir. Canlı sunucu veya sunucu kaynak kodu doğrulaması yapılmadı. «Kaynakta doğrulandı», sunucunun bugün aynı davranışı garanti ettiği anlamına gelmez.
 
 ## Adresler ve kodlama
 
@@ -10,7 +10,7 @@ Tarih: 2026-10-21. Kaynak: Windows Agent 1.9.4 ZIP'i. Bu belge istemcinin gönde
 - Socket.IO bağlantı adresi: `https://nuxprint.com/agent`. Namespace: `/agent`. Transport path: `/api/socket.io`. Bu iki değer birbirinin yerine geçmez.
 - SocketIOClient paket sürümü: 3.1.1. Sunucunun Socket.IO/Engine.IO sürümü ve transport zorunlulukları: **Doğrulanmadı**.
 
-Ana kaynak: `../reference/windows/src/PrintAgent.UI/Services/AgentService.cs` (aşağıda AS). Satırlar kopyanın değişmemiş haline aittir.
+Tablolardaki AS satırları tarihsel kaynak notlarıdır; artık mevcut bir dosyaya bağlantı değildir. Güncel Linux uygulaması `src/PrintAgent.Core/CloudSession.cs` ve `src/PrintAgent.Core/CloudConnection.cs` dosyalarındadır.
 
 ## HTTP uçları
 

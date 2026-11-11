@@ -8,13 +8,7 @@
     "MaxLocalClients": 16,
     "LocalRequestTimeoutSeconds": 90,
     "PrintSafety": {
-      "MaxCopiesPerJob": 100,
-      "MaxDocumentBytes": 20971520,
-      "JobTimeoutSeconds": 60,
-      "MaxCopiesPerMinute": 1000,
-      "MaxJobsPerMinute": 60,
-      "AllowRaw": true,
-      "AllowedRawTypes": ["raw", "zpl", "escpos", "escp", "pcl", "postscript", "ps", "epl", "tspl", "cpcl", "text"]
+      "JobTimeoutSeconds": 60
     }
   }
 }

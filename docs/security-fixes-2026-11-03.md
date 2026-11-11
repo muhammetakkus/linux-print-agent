@@ -2,7 +2,11 @@
 
 Tarih: 3 Kasım 2026. Kaynak bulgular: [2 Kasım incelemesi](security-review-2026-11-02.md).
 
-## Uygulanan değişiklikler
+## Güncel Linux davranışı — 11 Kasım 2026
+
+Windows masaüstü kaynağıyla baskı davranışı karşılaştırıldı. Önceki 100 kopya, 20 MiB belge, RAW türü izin listesi ve sekiz bekleyen iş sınırları kaldırıldı. PDF dışındaki işler RAW olarak gönderilir. İş kimliği tekrar baskıyı engellemez. Kuyruk için 30 saniye, yazdırma başladıktan sonra varsayılan 60 saniye beklenir. Kalan bölümler geçmiş incelemenin kaydıdır; eski kota ve tür ayarları artık kullanılmaz. Güncel PrintSafety ayarı yalnız JobTimeoutSeconds içerir.
+
+## Tarihsel uygulanan değişiklikler
 
 | Bulgu | Çözüm | Doğrulama |
 |---|---|---|
@@ -17,14 +21,13 @@ Tarih: 3 Kasım 2026. Kaynak bulgular: [2 Kasım incelemesi](security-review-202
 
 Windows kodu Linux paketine eklenmez. Windows raw baskısı ayrıca sonlandırılabilir alt sürece taşındı. PDF ve raw aynı iş süresi bütçesini kullanır. Komut argümanları ayrı aktarılır. Alt süreç çıktıları bellekte 8192 karakterle sınırlıdır; tıkanmayı önlemek için kalan çıktı okunup atılır.
 
-## Tekrar baskı ve kota
+## İşlerin işlenmesi
 
-- İş kimliği zorunludur. Kabul edilen iş, fiziksel gönderimden önce kalıcı kayda alınır.
-- Aynı kimlik ve içerik yeniden gelirse kayıtlı sonuç döner. İçerik değişmişse iş reddedilir.
-- Kayıt servisin yeniden başlamasından sonra da korunur. Belirsiz sonuçlu işler otomatik tekrar basılmaz; kullanıcı yazıcı kuyruğunu kontrol etmelidir.
-- Linux kayıt dosyası `/var/lib/nuxprint-agent/job-receipts.json`; Windows kayıt dosyası kullanıcıya özel veri dizinindedir. Belgelerin kendisi saklanmaz; içerik parmak izi ve sonuç saklanır.
-- Kayıt süresi 7 gün, kapasite 10.000 iş. Kapasite dolarsa süresi dolmamış kayıtlar silinerek koruma zayıflatılmaz; yeni işler reddedilir. Yedi günden eski bir kimlik yeniden kullanılabilir.
-- Cihaz başına kayan bir dakikalık pencerede varsayılan 60 iş ve 1000 kopya sınırı vardır. Kota uygulama belleğindedir; servis yeniden başlayınca sıfırlanır. Kalıcı kimlik kaydı ayrı olarak korunur.
+- İş kimliği istek doğrulamasında ve arayüzdeki geçici geçmişte kullanılır.
+- 11 Kasım 2026: Kalıcı iş kayıt defteri ve tekrar baskıyı engelleyen kontrol kaldırıldı.
+- Aynı kimlik ve içerik yeniden gelirse ajan yeni bir baskı isteği olarak işler; tekrar gönderme kararını API yönetir.
+- Ajan iş kayıt dosyası oluşturmaz veya okumaz. Önceden kurulmuş sürümden kalan kayıt dosyaları kullanılmaz.
+- 11 Kasım 2026: Yerel dakika başına iş/kopya kotaları kaldırıldı. Uygulama saatlik veya haftalık kullanım kotası uygulamaz; hesap kotalarını API yönetir. Dosya boyutu, tek işin kopya sayısı ve işlem zaman aşımı kontrolleri korunur. Eski ayarlardaki MaxJobsPerMinute ve MaxCopiesPerMinute alanları artık kullanılmaz.
 - Bulut işleyicisinde aynı anda en fazla 8 bekleyen iş tutulur.
 
 ## Linux ayarları
@@ -36,8 +39,6 @@ Windows kodu Linux paketine eklenmez. Windows raw baskısı ayrıca sonlandırı
   "MaxCopiesPerJob": 100,
   "MaxDocumentBytes": 20971520,
   "JobTimeoutSeconds": 60,
-  "MaxCopiesPerMinute": 1000,
-  "MaxJobsPerMinute": 60,
   "AllowRaw": true,
   "AllowedRawTypes": ["raw", "zpl", "escpos", "escp", "pcl", "postscript", "ps", "epl", "tspl", "cpcl", "text"]
 }

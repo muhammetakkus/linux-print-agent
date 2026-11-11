@@ -4,7 +4,7 @@
 
 Servis, CLI ve Avalonia arayüzü artık `linux-arm64` ve `linux-arm` hedeflerine yayımlanır.
 Üç uygulama da kendi .NET 8 çalışma ortamını içerir.
-Üretici her hedef için Desktop ve Server DEB paketleri oluşturur.
+Üretici her hedef için yalnız Desktop DEB paketi oluşturur.
 Mevcut Linux x64 hedefi korunur.
 
 Bulut API, Socket.IO, kimlik doğrulama, baskı sırası ve CUPS iş mantığı değiştirilmedi.
@@ -24,8 +24,7 @@ Yeni CPU hedefleri, uygulamanın işletim sistemi bağımlılıklarında veya pr
 - `.gitattributes`, `.gitignore`: yeni dizinde Linux satır sonları ve Python geçici dosyaları.
 
 Kullanıcı tarafından istenen taşıma Git'e kaydedilir: `linux-print-agent/` → `linux-print-agent-main/`.
-Masaüstündeki mevcut `referance/` ve taşınan `reference/` kaynakları değiştirilmez.
-README'nin üstteki iki büyük başlığı korunur.
+Projenin güncel kapsamı yalnız Linux masaüstü ajanıdır; Windows referans kaynakları gerekmez.
 
 ## Mimari seçimi
 

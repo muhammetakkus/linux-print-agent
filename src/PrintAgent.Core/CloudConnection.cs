@@ -11,7 +11,6 @@ public sealed class CloudConnection : IDisposable
     private readonly Func<List<PrinterInfo>> _getPrinters;
     private readonly Func<PrintJobData, Task<PrintJobResult>> _handlePrintJob;
     private readonly Func<PrintJobData, CancellationToken, Task<PrintJobResult>>? _cancellablePrintJob;
-    private readonly SemaphoreSlim _incomingJobs = new(8, 8);
     private readonly Func<string, SocketIOOptions, IAgentSocket> _createSocket;
     private readonly Func<TimeSpan, CancellationToken, Task> _delay;
     private readonly Random _random;
@@ -207,11 +206,6 @@ public sealed class CloudConnection : IDisposable
 
         socket.On("print:job", async response =>
         {
-            if (!_incomingJobs.Wait(0))
-            {
-                await response.CallbackAsync(new PrintJobResult { Status = "failed", ErrorMessage = "Too many pending print jobs." });
-                return;
-            }
             try
             {
                 var data = response.GetValue<PrintJobData>();
@@ -222,7 +216,6 @@ public sealed class CloudConnection : IDisposable
             {
                 await response.CallbackAsync(new PrintJobResult { Status = "failed", ErrorMessage = ex.Message });
             }
-            finally { _incomingJobs.Release(); }
         });
 
         socket.On("printers:registered", response =>

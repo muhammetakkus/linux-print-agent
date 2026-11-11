@@ -34,7 +34,7 @@ public class SocketTransportTests
             Assert.Equal("{\"token\":\"" + session.Auth!.Token + "\"}", auth);
             var registration = await server.Registration.Task.WaitAsync(TimeSpan.FromSeconds(8));
             // Uses the actual 3.1.1 default serializer, including null capability fields.
-            Assert.Equal("42/agent,[\"agent:register\",{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"windows\",\"printers\":[{\"name\":\"queue\",\"status\":\"offline\",\"connectionType\":\"Network\",\"driverName\":\"\",\"capabilities\":null}]}]", registration);
+            Assert.Equal("42/agent,[\"agent:register\",{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"linux\",\"printers\":[{\"name\":\"queue\",\"status\":\"offline\",\"connectionType\":\"Network\",\"driverName\":\"\",\"capabilities\":null}]}]", registration);
             await server.SendAsync("42/agent,7[\"print:job\",{\"jobId\":\"loopback-job\",\"printerName\":\"queue\",\"documentData\":\"AQI=\"}]");
             var job = await received.Task.WaitAsync(TimeSpan.FromSeconds(8));
             Assert.Equal("loopback-job", job.JobId);

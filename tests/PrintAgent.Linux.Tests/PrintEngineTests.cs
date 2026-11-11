@@ -28,11 +28,11 @@ public class PrintEngineTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task Raw_nonpositive_copies_are_rejected(int copies)
+    public async Task Raw_nonpositive_copies_default_to_one_like_Windows(int copies)
     {
         using var fixture = new PrintFixture();
-        Assert.Equal("failed", (await fixture.Engine.PrintAsync(new PrintJobData { JobId = Guid.NewGuid().ToString(), PrinterName = "queue", DocumentType = "raw", DocumentData = "AQI=", Copies = copies })).Status);
-        Assert.Empty(fixture.Cups.Submissions);
+        Assert.Equal("done", (await fixture.Engine.PrintAsync(new PrintJobData { JobId = Guid.NewGuid().ToString(), PrinterName = "queue", DocumentType = "raw", DocumentData = "AQI=", Copies = copies })).Status);
+        Assert.Single(fixture.Cups.Submissions);
     }
 
     [Fact]
@@ -109,13 +109,13 @@ public class PrintEngineTests
     }
 
     [Fact]
-    public async Task Pdf_decode_error_reaches_existing_socket_failure_handler_without_inventing_validation()
+    public async Task Pdf_decode_error_returns_failure_and_marks_history_failed()
     {
         using var fixture = new PrintFixture();
         var job = Pdf(); job.DocumentData = "not base64";
         Assert.Equal("failed", (await fixture.Engine.PrintAsync(job)).Status);
         Assert.False(fixture.Engine.IsPrinting);
-        Assert.Empty(fixture.Engine.Jobs);
+        Assert.Equal("failed", Assert.Single(fixture.Engine.Jobs).Status);
         Assert.Empty(fixture.Cups.Submissions);
     }
 
@@ -131,14 +131,14 @@ public class PrintEngineTests
     }
 
     [Fact]
-    public async Task Same_job_id_is_deduplicated_and_printer_names_keep_trim_case_matching()
+    public async Task Repeated_job_id_is_printed_again_and_printer_names_keep_trim_case_matching()
     {
         using var fixture = new PrintFixture();
         var job = Pdf(); job.JobId = "same"; job.PrinterName = " QUEUE ";
         Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
         Assert.Equal("queue", fixture.Engine.GetJobsSnapshot().Single().PrinterName);
         Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
-        Assert.Single(fixture.Cups.Submissions);
+        Assert.Equal(2, fixture.Cups.Submissions.Count);
     }
 
     [Fact]

@@ -37,7 +37,7 @@ public static class AgentServices
             return new CloudSession(new DeviceInfo { DeviceId = identity, DeviceName = Environment.MachineName, Platform = "linux" }, sp.GetRequiredService<ICredentialStore>());
         });
         services.AddSingleton(sp => new LinuxPrintEngine(sp.GetRequiredService<ICupsClient>(), () => sp.GetRequiredService<PrinterCatalog>().Printers,
-            options.CacheDirectory, options.PrintSafety, new PrintAgent.Common.Security.PrintJobLedger(Path.Combine(options.StateDirectory, "job-receipts.json"))));
+            options.CacheDirectory, options.PrintSafety));
         services.AddSingleton<Func<string, SocketIOOptions, IAgentSocket>>(_ => (url, settings) => new SocketIoAgentSocket(url, settings));
         services.AddSingleton(sp => new CloudConnection(sp.GetRequiredService<CloudSession>(), () => sp.GetRequiredService<PrinterCatalog>().Printers,
             sp.GetRequiredService<LinuxPrintEngine>().PrintAsync, sp.GetRequiredService<Func<string, SocketIOOptions, IAgentSocket>>(),

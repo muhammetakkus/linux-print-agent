@@ -17,10 +17,10 @@ public class SecurityRegressionTests
     }
     [Theory]
     [InlineData(2, 2, "done")]
-    [InlineData(2, 3, "failed")]
-    [InlineData(999, 101, "failed")]
+    [InlineData(2, 3, "done")]
+    [InlineData(999, 101, "done")]
     [InlineData(0, 100, "done")]
-    public async Task Lower_of_application_and_printer_limit_is_enforced(int printerMaximum, int copies, string status)
+    public async Task Copy_count_is_passed_through_like_Windows(int printerMaximum, int copies, string status)
     {
         using var fixture = new PrintFixture();
         fixture.Printers[0].Capabilities = new() { MaxCopies = printerMaximum };
@@ -56,46 +56,35 @@ public class SecurityRegressionTests
     }
 
     [Fact]
-    public void Durable_receipt_survives_restart_and_rejects_changed_content()
-    {
-        var directory = Path.Combine(Path.GetTempPath(), "np-ledger-" + Guid.NewGuid().ToString("N"));
-        try
-        {
-            var path = Path.Combine(directory, "receipts.json"); var options = new PrintSafetyOptions(); var job = PrintEngineTests.Pdf();
-            var first = new PrintJobLedger(path); Assert.Null(first.Reserve(job, options));
-            Assert.Contains("uncertain", new PrintJobLedger(path).Reserve(job, options)!.ErrorMessage);
-            first.Complete(job.JobId, new() { Status = "done" });
-            var restarted = new PrintJobLedger(path); Assert.Equal("done", restarted.Reserve(job, options)!.Status);
-            job.DocumentData = "AQI="; Assert.Equal("failed", restarted.Reserve(job, options)!.Status);
-        }
-        finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
-    }
-
-    [Fact]
-    public void Device_rate_limit_and_raw_disable_are_enforced()
-    {
-        var options = new PrintSafetyOptions { MaxJobsPerMinute = 1, AllowRaw = false };
-        var job = PrintEngineTests.Pdf(); var ledger = new PrintJobLedger(); Assert.Null(ledger.Reserve(job, options));
-        Assert.Contains("rate limit", ledger.Reserve(PrintEngineTests.Pdf(), options)!.ErrorMessage);
-        job.DocumentType = "raw"; Assert.NotNull(options.ValidateJob(job));
-    }
-
-    [Fact]
-    public async Task Oversized_base64_is_rejected_before_decoding()
+    public async Task Rapid_jobs_and_copies_are_not_subject_to_a_local_usage_quota()
     {
         using var fixture = new PrintFixture();
-        using var engine = new LinuxPrintEngine(fixture.Cups, () => fixture.Printers, fixture.Cache, new() { MaxDocumentBytes = 3 });
-        var job = PrintEngineTests.Pdf(); job.DocumentData = "AQIDBA==";
-        Assert.Equal("failed", (await engine.PrintAsync(job)).Status); Assert.Empty(fixture.Cups.Submissions);
+        for (var index = 0; index < 65; index++)
+        {
+            var job = PrintEngineTests.Pdf(); job.Copies = 100;
+            Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
+        }
+        Assert.Equal(65, fixture.Cups.Submissions.Count);
     }
+
     [Fact]
-    public async Task Excessive_raw_copies_are_rejected_before_any_submission()
+    public async Task Document_larger_than_previous_20_MiB_cap_is_submitted()
+    {
+        using var fixture = new PrintFixture();
+        var job = PrintEngineTests.Pdf();
+        job.DocumentData = Convert.ToBase64String(new byte[21 * 1024 * 1024]);
+        Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
+        Assert.Single(fixture.Cups.Submissions);
+    }
+
+    [Fact]
+    public async Task Raw_submission_failure_stops_remaining_copies()
     {
         using var fixture = new PrintFixture();
         fixture.Cups.Submit = (_, _, _, _, _, _) => Task.FromResult(new PrintAgent.Linux.CommandResult(1, "", "controlled stop"));
         var result = await fixture.Engine.PrintAsync(new PrintJobData { JobId = "copies", PrinterName = "queue", DocumentType = "raw", DocumentData = "AQI=", Copies = int.MaxValue });
         Assert.Equal("failed", result.Status);
-        Assert.Empty(fixture.Cups.Submissions);
+        Assert.Single(fixture.Cups.Submissions);
     }
 
     [Fact]
@@ -109,21 +98,24 @@ public class SecurityRegressionTests
     }
 
     [Fact]
-    public async Task Unknown_document_type_is_rejected()
+    public async Task Non_pdf_document_type_is_sent_as_raw_like_Windows()
     {
         using var fixture = new PrintFixture();
         var job = PrintEngineTests.Pdf(); job.DocumentType = "unknown";
-        Assert.Equal("failed", (await fixture.Engine.PrintAsync(job)).Status);
-        Assert.Empty(fixture.Cups.Submissions);
+        Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
+        Assert.Single(fixture.Cups.Submissions);
     }
 
-    [Fact]
-    public async Task Same_job_is_submitted_only_once()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Same_job_is_submitted_each_time_API_sends_it(bool changeContent)
     {
         using var fixture = new PrintFixture();
         var job = PrintEngineTests.Pdf(); job.JobId = "repeat";
         Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
+        if (changeContent) job.DocumentName = "changed.pdf";
         Assert.Equal("done", (await fixture.Engine.PrintAsync(job)).Status);
-        Assert.Single(fixture.Cups.Submissions);
+        Assert.Equal(2, fixture.Cups.Submissions.Count);
     }
 }

@@ -99,7 +99,7 @@ public sealed class CloudSession : IDisposable
             : $"{(int)abs.TotalMinutes} dakika";
         var yon = skew > TimeSpan.Zero ? "ileri" : "geri";
         return $"Bilgisayarınızın tarih/saat ayarı yanlış görünüyor (sunucudan yaklaşık {fark} {yon}). " +
-               "Lütfen Windows tarih ve saat ayarını düzeltin (otomatik ayarlamayı açın) ve tekrar deneyin.";
+               "Lütfen bilgisayarın tarih ve saat ayarını düzeltin (otomatik ayarlamayı açın) ve tekrar deneyin.";
     }
 
     /// <summary>

@@ -47,9 +47,9 @@ public class ModelContractTests
     }
 
     [Fact]
-    public void Device_defaults_are_preserved_including_original_platform()
+    public void Device_defaults_identify_the_Linux_agent()
     {
-        Assert.Equal("{\"deviceId\":\"\",\"deviceName\":\"\",\"platform\":\"windows\",\"isOnline\":false}", JsonSerializer.Serialize(new DeviceInfo(), HttpJson));
+        Assert.Equal("{\"deviceId\":\"\",\"deviceName\":\"\",\"platform\":\"linux\",\"isOnline\":false}", JsonSerializer.Serialize(new DeviceInfo(), HttpJson));
     }
 
     [Fact]

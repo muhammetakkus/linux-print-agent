@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 EPOCH = int(os.environ.get("SOURCE_DATE_EPOCH", "0"))
 TARGETS = {"linux-x64": ("amd64", 2, 62), "linux-arm64": ("arm64", 2, 183), "linux-arm": ("armhf", 1, 40)}
 MANIFEST = ".nuxprint-publish-manifest"
-DEBIAN_REVISION = "2"
+DEBIAN_REVISION = "3"
 
 
 def publish_files(directory):
@@ -173,5 +173,5 @@ if __name__ == "__main__":
     parser.add_argument("--rid", choices=TARGETS, default="linux-x64")
     args = parser.parse_args()
     version = re.search(r'AppVersion = "([0-9.]+)"', (ROOT / "src/PrintAgent.Common/Constants.cs").read_text()).group(1)
-    for kind in ("desktop", "server"):
+    for kind in ("desktop",):
         build(args.publish_root, args.output, kind, version, args.rid)

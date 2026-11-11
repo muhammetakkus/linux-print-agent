@@ -76,7 +76,7 @@ public class CloudSessionTests
             Assert.Equal(HttpMethod.Post, request.Method);
             Assert.Equal("https://nuxprint.com/api/agent/session", request.RequestUri!.AbsoluteUri);
             Assert.Null(request.Headers.Authorization);
-            Assert.Equal("{\"email\":\"user\",\"password\":\"test-only\",\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"windows\",\"agentVersion\":\"1.9.5\"}", body);
+            Assert.Equal("{\"email\":\"user\",\"password\":\"test-only\",\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"linux\",\"agentVersion\":\"1.9.5\"}", body);
             return Reply("{\"sessionToken\":\"test-session\",\"accessToken\":\"test-access\",\"customer\":null}");
         });
         var store = new TestCredentialStore();
@@ -150,7 +150,7 @@ public class CloudSessionTests
             Assert.Equal("https://nuxprint.com/api/agent/session/adopt", request.RequestUri!.AbsoluteUri);
             Assert.Equal("Bearer", request.Headers.Authorization!.Scheme);
             Assert.Equal("old-jwt", request.Headers.Authorization.Parameter);
-            Assert.Equal("{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"windows\",\"agentVersion\":\"1.9.5\"}", body);
+            Assert.Equal("{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"linux\",\"agentVersion\":\"1.9.5\"}", body);
             return Reply(JsonSerializer.Serialize(new { sessionToken = "upgraded", accessToken = FutureJwt() }));
         });
         using var session = Create(new TestCredentialStore(), handler);

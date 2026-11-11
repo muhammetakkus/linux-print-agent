@@ -9,6 +9,38 @@ namespace PrintAgent.Core.Tests;
 public class CloudConnectionTests
 {
     [Fact]
+    public async Task More_than_eight_incoming_jobs_reach_the_print_handler_like_Windows()
+    {
+        using var session = SignedIn();
+        var socket = new TestSocket();
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var received = 0;
+        using var connection = new CloudConnection(session, () => [], async job =>
+        {
+            Interlocked.Increment(ref received);
+            await release.Task;
+            return new PrintJobResult { Status = "done" };
+        }, (_, _) => socket);
+        using var cts = new CancellationTokenSource();
+        var run = connection.RunAsync(cts.Token);
+        try
+        {
+            await socket.Registered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            var requests = Enumerable.Range(0, 9).Select(index =>
+                socket.ReceiveAsync("print:job", JsonSerializer.Serialize(new PrintJobData { JobId = index.ToString() }))).ToArray();
+            Assert.Equal(9, received);
+            release.TrySetResult();
+            var replies = await Task.WhenAll(requests).WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.All(replies, reply => Assert.Contains("done", reply.CallbackJson));
+        }
+        finally
+        {
+            release.TrySetResult(); cts.Cancel();
+            await run.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+    }
+
+    [Fact]
     public async Task Unsigned_agent_waits_one_second_without_opening_socket()
     {
         using var session = CloudSessionTests.Create(new TestCredentialStore(), new StubHttp((_, _) => throw new InvalidOperationException()));
@@ -42,7 +74,7 @@ public class CloudConnectionTests
         Assert.Equal(TimeSpan.FromSeconds(10), options.ConnectionTimeout);
         Assert.Equal("{\"token\":\"" + session.Auth!.Token + "\"}", JsonSerializer.Serialize(options.Auth));
         Assert.Equal(new[] { "print:job", "printers:registered" }, socket.Handlers.Keys.Order());
-        Assert.Equal("{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"windows\",\"printers\":[{\"name\":\"queue\",\"status\":\"offline\",\"connectionType\":\"Network\",\"driverName\":\"driver\",\"capabilities\":null}]}", socket.Emitted.Single().Json);
+        Assert.Equal("{\"deviceId\":\"device-1\",\"deviceName\":\"host-1\",\"platform\":\"linux\",\"printers\":[{\"name\":\"queue\",\"status\":\"offline\",\"connectionType\":\"Network\",\"driverName\":\"driver\",\"capabilities\":null}]}", socket.Emitted.Single().Json);
         Assert.True(connection.IsConnected);
         cts.Cancel();
         await run.WaitAsync(TimeSpan.FromSeconds(5));
