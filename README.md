@@ -2,6 +2,16 @@
 
 gerekli proje son teknoloji bir şekilde yapılıp structure buraya ifade edilecek......
 
+# windows derleme
+wsl --install -d Ubuntu
+scripts/publish.sh
+
+# ubuntu için
+sudo apt update && sudo apt install -y dotnet-sdk-8.0 python3
+bash scripts/build.sh
+bash scripts/publish.sh linux-x64
+sudo apt install ./nuxprint-agent-desktop_<sürüm>-2_x64.deb
+
 ## Amaç
 
 NuxPrint, Linux bilgisayarındaki yazıcıları NuxPrint Cloud hesabına bağlar.
