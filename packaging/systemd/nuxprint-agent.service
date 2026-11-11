@@ -1,0 +1,30 @@
+[Unit]
+Description=NuxPrint Linux Cloud Print Agent
+After=network-online.target cups.service
+Wants=network-online.target
+Requires=cups.service
+
+[Service]
+Type=notify
+User=nuxprint-agent
+Group=nuxprint-agent
+WorkingDirectory=/opt/nuxprint-agent
+ExecStart=/opt/nuxprint-agent/service/PrintAgent.Service
+RuntimeDirectory=nuxprint-agent
+RuntimeDirectoryMode=0750
+StateDirectory=nuxprint-agent
+StateDirectoryMode=0700
+CacheDirectory=nuxprint-agent
+CacheDirectoryMode=0700
+UMask=0077
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=90
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

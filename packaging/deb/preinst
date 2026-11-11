@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+# Portable .NET 8 ARM32 requires ARMv7+ and a pre-time64 distribution ABI.
+if [ "$(dpkg --print-architecture)" = armhf ]; then
+  case "$(uname -m)" in
+    armv5*|armv6*) echo 'NuxPrint ARM32 requires ARMv7 or newer. Original Pi/Zero are unsupported.' >&2; exit 1 ;;
+  esac
+  . /etc/os-release
+  case "${ID:-}:${VERSION_ID:-}" in
+    debian:12|raspbian:12|ubuntu:22.04) ;;
+    *) echo 'NuxPrint .NET 8 ARM32 requires Debian/Raspberry Pi OS 12 (Bookworm) or Ubuntu 22.04. Use the ARM64 package with a 64-bit OS on newer releases.' >&2; exit 1 ;;
+  esac
+fi
+exit 0

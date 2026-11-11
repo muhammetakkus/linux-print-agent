@@ -1,0 +1,7 @@
+<Project>
+  <Target Name="WriteNuxPrintPublishManifest" AfterTargets="Publish" Condition="'$(OutputType)' == 'Exe'">
+    <WriteLinesToFile File="$(PublishDir).nuxprint-publish-manifest"
+                      Lines="@(ResolvedFileToPublish->'%(RelativePath)')"
+                      Encoding="UTF-8" Overwrite="true" />
+  </Target>
+</Project>

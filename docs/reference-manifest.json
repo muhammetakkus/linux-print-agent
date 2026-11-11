@@ -1,0 +1,256 @@
+{
+  "sourceZip": "C:\\Users\\ed554\\Desktop\\windows-print-agent-master (1).zip",
+  "zipSha256": "3AAB30A492F9DFB20DF2E9F95E787E79E6EF5230C601F4BBB1181CCC5A335239",
+  "extractedSource": "C:\\Users\\ed554\\AppData\\Local\\Temp\\nuxprint-reference-68d5d0f5b61a41f487bf2d4cc812f7c0\\windows-print-agent-master",
+  "analyzedAt": "2026-10-21",
+  "files": [
+    {
+      "zipEntry": "windows-print-agent-master/.gitignore",
+      "classification": "D",
+      "copied": false,
+      "referencePath": null,
+      "sha256": "C4A975939A43D9818D3C7D9C450A9F060BD1E4C033EEFC2EF150D81D4FE71303",
+      "bytes": 80
+    },
+    {
+      "zipEntry": "windows-print-agent-master/build-installer.ps1",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/build-installer.ps1",
+      "sha256": "78A018F06A9C946C8BE719B0436B7A925FB54FEF0F7D00DF9D718035AD80F02A",
+      "bytes": 4061
+    },
+    {
+      "zipEntry": "windows-print-agent-master/PrintAgent.sln",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/PrintAgent.sln",
+      "sha256": "223C0258AA7A00F100AF7ED4ED8703A0B1B84ABC5B27739C660DBEAAE301FC8D",
+      "bytes": 1403
+    },
+    {
+      "zipEntry": "windows-print-agent-master/README.md",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/README.md",
+      "sha256": "4A5A0845230AEA90037DC7572357321A9133E8D0DD95149C1365D3C5A733F94D",
+      "bytes": 2901
+    },
+    {
+      "zipEntry": "windows-print-agent-master/rules.md",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/rules.md",
+      "sha256": "4A513573EB7F8D98CAF2EFCB950FD3A183B4449243DE9A9D3F01BBE5024D5451",
+      "bytes": 2054
+    },
+    {
+      "zipEntry": "windows-print-agent-master/setup.iss",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/setup.iss",
+      "sha256": "C3BA31F665EF18D0FB9C7800D479B20269D9BBE54FCE61420B4AF35C2521D670",
+      "bytes": 5081
+    },
+    {
+      "zipEntry": "windows-print-agent-master/certs/isrg-root-x2.pem",
+      "classification": "D",
+      "copied": false,
+      "referencePath": null,
+      "sha256": "A13D881E11FE6DF181B53841F9FA738A2D7CA9AE7BE3D53C866F722B4242B013",
+      "bytes": 790
+    },
+    {
+      "zipEntry": "windows-print-agent-master/certs/isrgrootx1.pem",
+      "classification": "D",
+      "copied": false,
+      "referencePath": null,
+      "sha256": "22B557A27055B33606B6559F37703928D3E4AD79F110B407D04986E1843543D1",
+      "bytes": 1939
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Constants.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Constants.cs",
+      "sha256": "455C391E9BA1E89FF6DCD1B0979CD40E2281C0E1B3AF4580E3548D2CD9EF0DD8",
+      "bytes": 957
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/PrintAgent.Common.csproj",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/PrintAgent.Common.csproj",
+      "sha256": "97E0ADD03158986BB282322DE0DAD0A00B03D6FD63035BE91915E6386B8F40F3",
+      "bytes": 335
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Helpers/CredentialStore.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Helpers/CredentialStore.cs",
+      "sha256": "ECBDE1C37278E1F99770FEB9D40C524056720DEC1363E456D71C7FA77700D85A",
+      "bytes": 1239
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Helpers/DeviceIdHelper.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Helpers/DeviceIdHelper.cs",
+      "sha256": "E59161563B0E9314A6B465FA6A32CA61D348207709247A15560C861377AF718B",
+      "bytes": 662
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/AuthData.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/AuthData.cs",
+      "sha256": "BBF27CC9DBAE3A5F28CCE8EE420C25A506B81F4FACC351E05E1C09CC4FF71D6C",
+      "bytes": 1989
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/DeviceInfo.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/DeviceInfo.cs",
+      "sha256": "9E4719CC1C817AEC444FC7BB1413E6D74D26EBE18AC2C7CCC2D8F4FED5DF327A",
+      "bytes": 274
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/LogEntry.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/LogEntry.cs",
+      "sha256": "D656AD89B41A9C7F57E89EF4A6ABAAD2435EC395527AE9B0EA94520CC03FCAE5",
+      "bytes": 266
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/PrinterInfo.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/PrinterInfo.cs",
+      "sha256": "E0878AB42B6577992D7C0BAEA8B4095417E05C911CA4A8A9059AF51CE7AE9875",
+      "bytes": 2968
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/PrintJobData.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/PrintJobData.cs",
+      "sha256": "F2F4400C919294F81395ADEA2249D2322CED2CA49D5BE051FEB82965C30DEF6D",
+      "bytes": 1934
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.Common/Models/PrintJobRecord.cs",
+      "classification": "A",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.Common/Models/PrintJobRecord.cs",
+      "sha256": "6B2B551EEDD82C01FBE9EA6A8164AB2EA158CA27CB883692363BCC54508D42C2",
+      "bytes": 451
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/App.xaml",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/App.xaml",
+      "sha256": "AEB3E574D6661737A0B7C9A3E0DF12E72268B000944DA72A1994AEE4602FC27F",
+      "bytes": 6938
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/App.xaml.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/App.xaml.cs",
+      "sha256": "49B4C83F3498324EBBBFB57F058C9D33297477B544C820A9BDBFB5DC60DD82EB",
+      "bytes": 782
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/PrintAgent.UI.csproj",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/PrintAgent.UI.csproj",
+      "sha256": "ABB331637B407B9AF40A5D82A77CD32F06986D1DD942F0AF1B7B482147855C51",
+      "bytes": 1144
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Converters/Converters.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Converters/Converters.cs",
+      "sha256": "2819403D576A7111D340B727623B3DA7F59A88A5D3DD47D91340DBCC43F70F00",
+      "bytes": 2372
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Resources/icon.ico",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Resources/icon.ico",
+      "sha256": "CE7B2759AD9BDFDF9E827414E3142E296BD4EABCC04E6274298948E12FAC8CD2",
+      "bytes": 45193
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Resources/icon.png",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Resources/icon.png",
+      "sha256": "C859024DE0E4ECCCF2441F3C78D909C93B0A2867D82A227C4919A1AEAF48EB87",
+      "bytes": 39137
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Services/AgentService.cs",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Services/AgentService.cs",
+      "sha256": "F2821CCDEFE25771B6B78F017CDA3049B754F4661975DE270503D3F639AAF262",
+      "bytes": 56541
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Services/PrinterCapabilitiesHelper.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Services/PrinterCapabilitiesHelper.cs",
+      "sha256": "98FBD1681539968090CA1EC8D12B6A76C619D60983925CF1ED9AE18281099A96",
+      "bytes": 9460
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Services/RawPrintHelper.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Services/RawPrintHelper.cs",
+      "sha256": "9CCB7512BE49877317CD656B4043F335A98D45807E019B072AA3AD7B096C86A8",
+      "bytes": 3525
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Themes/LightTheme.xaml",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Themes/LightTheme.xaml",
+      "sha256": "33405A0A4C1F49FA1ECE79FF5AAEB5AD624B77A2A9373C55D164C272EC9D1B58",
+      "bytes": 2747
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/ViewModels/MainViewModel.cs",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/ViewModels/MainViewModel.cs",
+      "sha256": "6ACACF8132E7BA6FD30C3C7D68E96698BF7E81A3EF2534ACCA81DFF2C6419340",
+      "bytes": 11896
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Views/MainWindow.xaml",
+      "classification": "C",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Views/MainWindow.xaml",
+      "sha256": "7B13F2B3047C22B8BF5BBF646BBB9E4B04AAF40D8023A7F9203D0B7ED965AFD2",
+      "bytes": 51311
+    },
+    {
+      "zipEntry": "windows-print-agent-master/src/PrintAgent.UI/Views/MainWindow.xaml.cs",
+      "classification": "B",
+      "copied": true,
+      "referencePath": "reference/windows/src/PrintAgent.UI/Views/MainWindow.xaml.cs",
+      "sha256": "D3B1FD23C84E1D070EB5D1C0021A0E039869D822127312118438396CEBE234E9",
+      "bytes": 3968
+    }
+  ]
+}

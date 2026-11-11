@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+case "$1" in
+  configure)
+    getent group nuxprint-agent >/dev/null || addgroup --system nuxprint-agent
+    getent passwd nuxprint-agent >/dev/null || adduser --system --ingroup nuxprint-agent --home /var/lib/nuxprint-agent --no-create-home --shell /usr/sbin/nologin nuxprint-agent
+    install -d -o nuxprint-agent -g nuxprint-agent -m 0700 /var/lib/nuxprint-agent /var/cache/nuxprint-agent
+    deb-systemd-helper enable nuxprint-agent.service >/dev/null || true
+    if [ -d /run/systemd/system ]; then
+      systemctl daemon-reload
+      deb-systemd-invoke restart nuxprint-agent.service || true
+    fi
+    ;;
+esac
+exit 0

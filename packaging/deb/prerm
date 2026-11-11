@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+case "$1" in
+  remove|upgrade|deconfigure)
+    if [ -d /run/systemd/system ]; then deb-systemd-invoke stop nuxprint-agent.service || true; fi
+    ;;
+esac
+exit 0

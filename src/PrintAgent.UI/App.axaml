@@ -1,0 +1,10 @@
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="PrintAgent.UI.App" RequestedThemeVariant="Light">
+  <Application.Styles>
+    <FluentTheme />
+    <Style Selector="Window"><Setter Property="FontFamily" Value="DejaVu Sans"/><Setter Property="Background" Value="#F8FAFC"/><Setter Property="Foreground" Value="#0F172A"/></Style>
+    <Style Selector="Button"><Setter Property="MinHeight" Value="38"/><Setter Property="Padding" Value="16,8"/></Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="#1AA3F0"/><Setter Property="Foreground" Value="White"/></Style>
+    <Style Selector="Border.card"><Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#EAEEF2"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="12"/><Setter Property="Padding" Value="24"/></Style>
+    <Style Selector="TextBlock.label"><Setter Property="Foreground" Value="#64748B"/><Setter Property="FontSize" Value="12"/></Style>
+  </Application.Styles>
+</Application>

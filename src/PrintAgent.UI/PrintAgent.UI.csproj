@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../PrintAgent.Common/PrintAgent.Common.csproj" />
+    <PackageReference Include="Avalonia.X11" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Skia" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+    <AvaloniaResource Include="Assets/**" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="PrintAgent.UI.MainWindow" Title="NuxPrint Agent" Width="860" Height="660" MinWidth="640" MinHeight="520" Icon="/Assets/icon.png">
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer IsVisible="{Binding !IsAuthenticated}">
+      <Border Classes="card" Width="420" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24">
+        <StackPanel Spacing="14">
+          <Image Source="/Assets/icon.png" Width="64" Height="64"/>
+          <TextBlock Text="NuxPrint Agent" FontSize="26" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+          <TextBlock Text="Sign in to connect your printers" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+          <TextBlock Text="Email or username"/>
+          <TextBox x:Name="EmailInput" Text="{Binding Email}" AutomationProperties.Name="Email or username"/>
+          <TextBlock Text="Password"/>
+          <TextBox x:Name="PasswordInput" Text="{Binding Password}" PasswordChar="{Binding PasswordCharacter}" AutomationProperties.Name="Password"/>
+          <CheckBox Content="Show password" IsChecked="{Binding ShowPassword}"/>
+          <TextBlock Text="{Binding Error}" Foreground="#B91C1C" TextWrapping="Wrap"/>
+          <Button x:Name="SignInButton" Content="Sign in" Classes="primary" Command="{Binding LoginCommand}" IsEnabled="{Binding LoginFormReady}" IsDefault="True" HorizontalAlignment="Stretch"/>
+          <ProgressBar IsIndeterminate="True" IsVisible="{Binding Busy}" Height="3"/>
+        </StackPanel>
+      </Border>
+    </ScrollViewer>
+    <TabControl x:Name="AgentTabs" IsVisible="{Binding IsAuthenticated}" Margin="20">
+      <TabItem Header="Account">
+        <ScrollViewer><Border Classes="card" Margin="0,14,0,0"><StackPanel Spacing="10">
+          <TextBlock Text="Account Info" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <TextBlock Classes="label" Text="Email"/><TextBlock Text="{Binding Customer.Email}"/>
+          <TextBlock Classes="label" Text="Name"/><TextBlock Text="{Binding Customer.Name}"/>
+          <TextBlock Classes="label" Text="Device ID"/><SelectableTextBlock Text="{Binding DeviceId}"/>
+          <TextBlock Classes="label" Text="Version"/><TextBlock Text="{Binding VersionLabel}"/><TextBlock Text="{Binding LatestVersionLabel}"/>
+          <TextBlock Classes="label" Text="API Key"/>
+          <Grid ColumnDefinitions="*,Auto"><SelectableTextBlock Text="{Binding Customer.ApiKey}" TextWrapping="Wrap"/><Button Grid.Column="1" Content="Copy" Click="CopyApiKey" AutomationProperties.Name="Copy API key"/></Grid>
+          <TextBlock Text="{Binding Error}" Foreground="#B91C1C" TextWrapping="Wrap"/>
+        </StackPanel></Border></ScrollViewer>
+      </TabItem>
+      <TabItem Header="Printers">
+        <Grid RowDefinitions="Auto,*" Margin="0,14,0,0">
+          <Grid ColumnDefinitions="*,Auto"><TextBlock Text="Printers" FontSize="22" FontWeight="SemiBold"/><Button Grid.Column="1" Content="Refresh" Command="{Binding RefreshCommand}"/></Grid>
+          <ScrollViewer Grid.Row="1" Margin="0,14,0,0"><StackPanel>
+            <TextBlock Text="No printers found" IsVisible="{Binding !Printers.Count}" Foreground="#64748B" Margin="0,20"/>
+            <ItemsControl ItemsSource="{Binding Printers}"><ItemsControl.ItemTemplate><DataTemplate>
+              <Border Classes="card" Margin="0,0,0,10"><Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16"/>
+                <TextBlock Grid.Column="1" Text="{Binding Status}" Foreground="#0F172A"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,8"><TextBlock Classes="label" Text="{Binding DriverName}"/><TextBlock Classes="label" Text="{Binding ConnectionType}"/></StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10"><TextBlock Text="{Binding ExternalId}" VerticalAlignment="Center"/><Button Content="Copy ID" Tag="{Binding ExternalId}" Click="CopyPrinterId"/></StackPanel>
+                <Button Grid.Row="2" Grid.Column="1" Content="Test" Command="{Binding DataContext.TestPrintCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Name}"/>
+              </Grid></Border>
+            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+          </StackPanel></ScrollViewer>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Jobs">
+        <Grid RowDefinitions="Auto,*" Margin="0,14,0,0">
+          <Grid ColumnDefinitions="*,Auto"><TextBlock Text="Print Jobs" FontSize="22" FontWeight="SemiBold"/><Button Grid.Column="1" Content="Clear" Command="{Binding ClearJobsCommand}"/></Grid>
+          <ScrollViewer Grid.Row="1" Margin="0,14,0,0"><StackPanel>
+            <TextBlock Text="No print jobs yet" IsVisible="{Binding !Jobs.Count}" Foreground="#64748B" Margin="0,20"/>
+            <ItemsControl ItemsSource="{Binding Jobs}"><ItemsControl.ItemTemplate><DataTemplate>
+              <Border Classes="card" Margin="0,0,0,10"><Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                <TextBlock Text="{Binding DocumentName}" FontWeight="SemiBold"/><TextBlock Grid.Column="1" Text="{Binding Status}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,8"><TextBlock Classes="label" Text="{Binding PrinterName}"/><TextBlock Classes="label" Text="{Binding ReceivedAt, StringFormat={}{0:HH:mm:ss}}"/></StackPanel>
+                <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding ErrorMessage}" Foreground="#B91C1C" TextWrapping="Wrap"/>
+              </Grid></Border>
+            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+          </StackPanel></ScrollViewer>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Log">
+        <Border Background="#0F172A" CornerRadius="10" Padding="16" Margin="0,14,0,0"><ScrollViewer><ItemsControl ItemsSource="{Binding Logs}"><ItemsControl.ItemTemplate><DataTemplate>
+          <Grid ColumnDefinitions="70,65,*" Margin="0,4"><TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Foreground="#94A3B8" FontSize="12"/><TextBlock Grid.Column="1" Text="{Binding Level}" Foreground="#38BDF8" FontSize="12"/><TextBlock Grid.Column="2" Text="{Binding Message}" Foreground="#CBD5E1" TextWrapping="Wrap" FontSize="12"/></Grid>
+        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ScrollViewer></Border>
+      </TabItem>
+    </TabControl>
+    <Border Grid.Row="1" Background="White" BorderBrush="#EAEEF2" BorderThickness="0,1,0,0" Padding="20,10">
+      <StackPanel Spacing="4">
+        <Grid ColumnDefinitions="*,Auto,Auto"><StackPanel Orientation="Horizontal" Spacing="12"><TextBlock Text="{Binding ConnectionState}"/><TextBlock Text="{Binding VersionLabel}"/></StackPanel><Button Grid.Column="1" Content="Update" Command="{Binding UpdateCommand}" IsVisible="{Binding UpdateAvailable}" Margin="0,0,8,0"/><Button Grid.Column="2" Content="Logout" Command="{Binding LogoutCommand}" IsVisible="{Binding IsAuthenticated}" IsEnabled="{Binding !Busy}"/></Grid>
+        <TextBlock Text="{Binding Notification}" Foreground="#64748B" TextWrapping="Wrap" FontSize="12"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

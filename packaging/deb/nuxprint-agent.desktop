@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=NuxPrint Agent
+Comment=Connect local printers to NuxPrint Cloud
+Exec=/usr/bin/nuxprint-agent-ui
+TryExec=/usr/bin/nuxprint-agent-ui
+Icon=nuxprint-agent
+Terminal=false
+Categories=Utility;
+StartupNotify=true
